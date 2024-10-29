@@ -19,17 +19,18 @@ app.listen(PORT,()=>{
     console.log("Server is Live and Running");
 });
 
-app.post("/register",async(req,res)=>{
-   const {name,email,password} = req.body;
-    try {
-        const hashedPassword = await bcryptjs.hash(password,10);
-        const newUser = new auth.schema({name,email,password:hashedPassword});
-        await newUser.save();
-        res.status(200).send("Succssesfuly registered a new user");
-    } catch (error) {
-        res.status(500).send("Unable to register user credentials",error);
-    }
+app.post("/register", async (req, res) => {
+  const { name, email, password } = req.body;
+  try {
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    const newUser = new auth({ name, email, password: hashedPassword });
+    await newUser.save();
+    res.status(200).json({ message: "Successfully registered a new user" });
+  } catch (error) {
+    res.status(500).json({ message: "Unable to register user credentials", error: error.message });
+  }
 });
+
 
 app.post("/login",async(req,res)=>{
     const {email,password} = req.body;
@@ -37,19 +38,19 @@ app.post("/login",async(req,res)=>{
         const USER_RECORD = await  auth.findOne({email:email});
 
         if (!USER_RECORD) {
-            res.status(404).send("User name or email does not exist");
+             res.status(404).json({ message: "User does not exist" });
         }
 
       const IS_PASSWORD_VALID = await bcryptjs.compare(password,USER_RECORD.password);
       
       if (!IS_PASSWORD_VALID) {
-        res.status(501).send("Invalid Password");
+     res.status(501).json({ message: "invalid password" });
       }else{
-        res.status(200).send("Succsseful login");
+       res.status(200).json({ message: "Successfully Login" });
     }
 
     } catch (error) {
-        res.status(404).send("User email and password not found");
+        res.status(404).json({ message: "Unable to log in" });
     }
 });
 
