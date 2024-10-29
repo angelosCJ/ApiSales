@@ -7,8 +7,9 @@ const salesSchema = require("./schema");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({
+  origin: ['http://192.168.100.3:8081', 'http://192.168.100.3:8080']
+}));    
 mongoose.connect("mongodb+srv://kadurienzo:ballsdeep%402025@mern.zylr0.mongodb.net/Sales?retryWrites=true&w=majority&appName=MERN").
 then(()=> console.log("Connected to MongoDB")).
 catch((error)=> console.log("Unable to connect to database",error));
