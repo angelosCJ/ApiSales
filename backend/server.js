@@ -74,22 +74,28 @@ app.get("/read",async(req,res)=>{
     }
 });
 
-app.put("/update",async(req,res)=>{
-  const {id,updateDate,updateName,updateQuantity,updatePrice,updateTotal} = req.body;
+
+
+app.put("/update", async (req, res) => {
+  const { id, updateDate, updateName, updateQuantity, updatePrice, updateTotal } = req.body;
   try {
     const updateSalesData = await salesSchema.findById(id);
-    if(updateSalesData){
-     updateSalesData.date = updateDate;
-     updateSalesData.name = updateName;
-     updateSalesData.quantity = updateQuantity;
-     updateSalesData.price = updatePrice;
-     updateSalesData.total = updateTotal;
-     updateSalesData.save();
-      res.status(201).json({ message: "Update succsseful" });
+    if (updateSalesData) {
+      updateSalesData.date = updateDate;
+      updateSalesData.name = updateName;
+      updateSalesData.quantity = updateQuantity;
+      updateSalesData.price = updatePrice;
+      updateSalesData.total = updateTotal;
+      await updateSalesData.save(); // await added for consistency
+      res.status(201).json({ message: "Update successful" });
+    } else {
+      res.status(404).json({ message: "Sales record not found" });
     }
   } catch (error) {
-     res.status(501).json({ message: "Unable to update date" });
-});
+    res.status(500).json({ message: "Unable to update data", error: error.message });
+  }
+}); 
+
 
 app.delete('/delete/:id',async (req,res)=>{
     const id = req.params.id;
