@@ -59,9 +59,9 @@ app.post("/insert",async(req,res)=>{
     try {
         const SALES_RECORDS = new salesSchema.schema({date,name,quantity,price,total});
         await SALES_RECORDS.save();
-        res.status(201).send("Sales records saved successfuly");
+        res.status(201).json({ message: "Sales record saved successfuly" });
     } catch (error) {
-        res.status(501).send("Unable to save data",error);
+     res.status(501).json({ message: "Unable to send data",error});
     }
 });
 
@@ -70,7 +70,7 @@ app.get("/read",async(req,res)=>{
         const SALES_DATA = await salesSchema.find({});
         res.send(SALES_DATA);
     } catch (error) {
-        res.status(501).send("Request Failed");
+       res.status(501).json({ message: "unable to read data" });
     }
 });
 
@@ -85,11 +85,10 @@ app.put("/update",async(req,res)=>{
      updateSalesData.price = updatePrice;
      updateSalesData.total = updateTotal;
      updateSalesData.save();
-     res.status(201).send("Upadete Successful");
+      res.status(201).json({ message: "Update succsseful" });
     }
   } catch (error) {
-     res.status(501).send("Unable to update data",error);
-  }
+     res.status(501).json({ message: "Unable to update date" });
 });
 
 app.delete('/delete/:id',async (req,res)=>{
