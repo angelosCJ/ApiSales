@@ -31,32 +31,26 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
-
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log("Login attempt for email:", email.toLowerCase());  // Log email input
   try {
     const USER_RECORD = await auth.findOne({ email: email.toLowerCase() });
-    console.log("User record found:", USER_RECORD);  // Log retrieved user record
-
+    console.log("User found:", USER_RECORD);  // Check if user was found
     if (!USER_RECORD) {
       return res.status(404).json({ message: "User does not exist" });
     }
-
     const IS_PASSWORD_VALID = await bcryptjs.compare(password, USER_RECORD.password);
-    console.log("Is password valid:", IS_PASSWORD_VALID);  // Log password validation result
-
+    console.log("Password valid:", IS_PASSWORD_VALID);  // Log password comparison result
     if (!IS_PASSWORD_VALID) {
-      return res.status(501).json({ message: "Invalid password" });
-    } else {
-      return res.status(200).json({ message: "Successfully Login" });
+      return res.status(401).json({ message: "Invalid password" });
     }
+    res.status(200).json({ message: "Successfully logged in" });
   } catch (error) {
-    console.error("Error in login:", error);  // Log any errors
-    return res.status(404).json({ message: "Unable to log in" });
+    console.log("Login error:", error.message);  // Log unexpected errors
+    res.status(500).json({ message: "Unable to log in", error: error.message });
   }
 });
-
 
 
 app.post("/insert",async(req,res)=>{
