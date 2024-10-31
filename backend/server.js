@@ -23,10 +23,12 @@ app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
+    console.log("Hashed Password:", hashedPassword);  // Log hashed password
     const newUser = new auth({ name, email, password: hashedPassword });
     await newUser.save();
     res.status(200).json({ message: "Successfully registered a new user" });
   } catch (error) {
+    console.error("Error in registration:", error);  // Log any errors
     res.status(500).json({ message: "Unable to register user credentials", error: error.message });
   }
 });
@@ -36,12 +38,14 @@ app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const USER_RECORD = await auth.findOne({ email: email });
+    console.log("User record found:", USER_RECORD);  // Log retrieved user record
 
     if (!USER_RECORD) {
       return res.status(404).json({ message: "User does not exist" });
     }
 
     const IS_PASSWORD_VALID = await bcryptjs.compare(password, USER_RECORD.password);
+    console.log("Is password valid:", IS_PASSWORD_VALID);  // Log password validation result
 
     if (!IS_PASSWORD_VALID) {
       return res.status(501).json({ message: "Invalid password" });
@@ -49,9 +53,11 @@ app.post("/login", async (req, res) => {
       return res.status(200).json({ message: "Successfully Login" });
     }
   } catch (error) {
+    console.error("Error in login:", error);  // Log any errors
     return res.status(404).json({ message: "Unable to log in" });
   }
 });
+
 
 
 app.post("/insert",async(req,res)=>{
