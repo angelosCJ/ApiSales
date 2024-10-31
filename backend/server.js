@@ -23,21 +23,20 @@ app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const hashedPassword = await bcryptjs.hash(password, 10);
-    console.log("Hashed Password:", hashedPassword);  // Log hashed password
-    const newUser = new auth({ name, email, password: hashedPassword });
+    const newUser = new auth({ name, email: email.toLowerCase(), password: hashedPassword });
     await newUser.save();
     res.status(200).json({ message: "Successfully registered a new user" });
   } catch (error) {
-    console.error("Error in registration:", error);  // Log any errors
     res.status(500).json({ message: "Unable to register user credentials", error: error.message });
   }
 });
 
 
+
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const USER_RECORD = await auth.findOne({ email: email });
+    const USER_RECORD = await auth.findOne({ email: email.toLowerCase() });
     console.log("User record found:", USER_RECORD);  // Log retrieved user record
 
     if (!USER_RECORD) {
