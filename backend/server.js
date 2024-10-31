@@ -56,17 +56,24 @@ app.post("/login", async (req, res) => {
     }
 });
 
-
-app.post("/insert",async(req,res)=>{
-    const {date,name,quantity,price,total} = req.body;
+app.post("/insert", async (req, res) => {
+    const { date, name, quantity, price, total } = req.body;
     try {
-        const SALES_RECORDS = new salesSchema.schema({date,name,quantity,price,total});
-        await SALES_RECORDS.save();
-         res.status(200).json({ message: "Sales records saved Successfully " });
+        const salesRecord = new salesSchema({
+            date: new Date(date), // ensure the date is properly formatted as Date object
+            name,
+            quantity,
+            price,
+            total
+        });
+        await salesRecord.save();
+        res.status(200).json({ message: "Sales record saved successfully" });
     } catch (error) {
-           res.status(501).json({ message: "Unable to save data" });
+        console.error("Error saving sales record:", error); // Log error for debugging
+        res.status(501).json({ message: "Unable to save data", error: error.message });
     }
 });
+
 
 app.get("/read",async(req,res)=>{
     try {
