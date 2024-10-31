@@ -32,27 +32,27 @@ app.post("/register", async (req, res) => {
 });
 
 
-app.post("/login",async(req,res)=>{
-    const {email,password} = req.body;
-    try {
-        const USER_RECORD = await  auth.findOne({email:email});
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const USER_RECORD = await auth.findOne({ email: email });
 
-        if (!USER_RECORD) {
-             res.status(404).json({ message: "User does not exist" });
-        }
-
-      const IS_PASSWORD_VALID = await bcryptjs.compare(password,USER_RECORD.password);
-      
-      if (!IS_PASSWORD_VALID) {
-     res.status(501).json({ message: "invalid password" });
-      }else{
-       res.status(200).json({ message: "Successfully Login" });
+    if (!USER_RECORD) {
+      return res.status(404).json({ message: "User does not exist" });
     }
 
-    } catch (error) {
-        res.status(404).json({ message: "Unable to log in" });
+    const IS_PASSWORD_VALID = await bcryptjs.compare(password, USER_RECORD.password);
+
+    if (!IS_PASSWORD_VALID) {
+      return res.status(501).json({ message: "Invalid password" });
+    } else {
+      return res.status(200).json({ message: "Successfully Login" });
     }
+  } catch (error) {
+    return res.status(404).json({ message: "Unable to log in" });
+  }
 });
+
 
 app.post("/insert",async(req,res)=>{
     const {date,name,quantity,price,total} = req.body;
