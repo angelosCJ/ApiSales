@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const dataSchema = new mongoose.Schema({
-   date: { type: Date, required: true },
+   date: { type: String, required: true },  // Changed to String to store formatted date
    name: { type: String, required: true },
    quantity: { type: Number, required: true },
    price: { type: Number, required: true },
