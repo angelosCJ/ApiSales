@@ -64,24 +64,28 @@ app.post("/insert", async (req, res) => {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
     const year = date.getFullYear();
 
-    return ${day}/${month}/${year} ${hours}:${minutes};
-};
-    const { date, name, quantity, price, total } = req.body;
-    try {
-       const salesRecord = new salesSchema({
-          date: formatDate(new Date(date)), // Format the date before storing
-          name,
-          quantity,
-          price,
-          total
-         });
-        await salesRecord.save();
-        res.status(200).json({ message: "Sales record saved successfully" });
-    } catch (error) {
-        console.error("Error saving sales record:", error); // Log error for debugging
-        res.status(501).json({ message: "Unable to save data", error: error.message });
-    }
+    return `${day}/${month}/${year} ${hours}:${minutes}`; // Wrapped in backticks
+  };
+
+  const { date, name, quantity, price, total } = req.body;
+
+  try {
+    const salesRecord = new salesSchema({
+      date: formatDate(new Date(date)), // Format the date before storing
+      name,
+      quantity,
+      price,
+      total
+    });
+    
+    await salesRecord.save();
+    res.status(200).json({ message: "Sales record saved successfully" });
+  } catch (error) {
+    console.error("Error saving sales record:", error); // Log error for debugging
+    res.status(501).json({ message: "Unable to save data", error: error.message });
+  }
 });
+
 
 app.get("/read",async(req,res)=>{
     try {
