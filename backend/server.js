@@ -91,16 +91,16 @@ app.post("/insert", async (req, res) => {
   }
 });
 
-
-
-app.get("/read",async(req,res)=>{
+app.get("/read", async (req, res) => {
     try {
-        const SALES_DATA = await salesSchema.find({});
-        res.send(SALES_DATA);
+        const salesData = await salesSchema.find({});
+        res.status(200).json(salesData); // Send response with status 200 and the sales data in JSON format
     } catch (error) {
-         res.status(501).json({ message: "Unable to read data",error });
+        console.error("Error reading sales data:", error); // Log the error for debugging
+        res.status(500).json({ message: "Unable to read data", error: error.message }); // Use 500 for server errors
     }
 });
+
 
 app.put("/update",async(req,res)=>{
   const {id,updateDate,updateName,updateQuantity,updatePrice,updateTotal} = req.body;
