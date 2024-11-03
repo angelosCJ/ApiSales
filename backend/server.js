@@ -87,7 +87,7 @@ app.post("/insert", async (req, res) => {
     
     await salesRecord.save();
     res.status(200).json({ message: "Sales record saved successfully" });
-    res.json({ sale });
+  
   } catch (error) {
     console.error("Error saving sales record:", error); // Log error for debugging
     res.status(500).json({ message: "Unable to save data", error: error.message });
@@ -98,6 +98,7 @@ app.get("/read", async (req, res) => {
     try {
         const salesData = await salesSchema.find({});
         res.status(200).json(salesData); // Send response with status 200 and the sales data in JSON format
+        res.json({ sale });
     } catch (error) {
         console.error("Error reading sales data:", error); // Log the error for debugging
         res.status(500).json({ message: "Unable to read data", error: error.message }); // Use 500 for server errors
