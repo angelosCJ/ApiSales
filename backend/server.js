@@ -67,10 +67,10 @@ app.post("/insert", async (req, res) => {
     return `${day}/${month}/${year} ${hours}:${minutes}`; // Formatted as dd/mm/yyyy hh:mm
   };
 
-  const { date, name, quantity, price, total } = req.body;
+  const { date, name, quantity, price, total, sale } = req.body;
 
   // Basic input validation
-  if (!date || !name || !quantity || !price || !total) {
+  if (!date || !name || !quantity || !price || !total || !sale) {
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -80,7 +80,9 @@ app.post("/insert", async (req, res) => {
       name,
       quantity: parseFloat(quantity),     // Ensure quantity is a number
       price: parseFloat(price),           // Ensure price is a number
-      total: parseFloat(total)            // Ensure total is a number
+      total: parseFloat(total) ,           // Ensure total is a number
+      sale
+      
     });
     
     await salesRecord.save();
@@ -112,6 +114,7 @@ app.put("/update",async(req,res)=>{
      updateSalesData.quantity = updateQuantity;
      updateSalesData.price = updatePrice;
      updateSalesData.total = updateTotal;
+     updateSalesData.sale = updateSale; 
      updateSalesData.save();
        res.status(201).json({ message: "Updated Successfully" });
     }
