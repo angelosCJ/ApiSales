@@ -57,42 +57,32 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/insert", async (req, res) => {
-  const formatDate = (date) => {
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-    const year = date.getFullYear();
-
-    return `${day}/${month}/${year} ${hours}:${minutes}`; // Formatted as dd/mm/yyyy hh:mm
-  };
-
   const { date, name, quantity, price, total, sale } = req.body;
 
-  // Basic input validation
+  // Validate fields
   if (!date || !name || !quantity || !price || !total || !sale) {
+    console.log("Validation failed:", { date, name, quantity, price, total, sale });
     return res.status(400).json({ message: "All fields are required." });
   }
 
   try {
     const salesRecord = new salesSchema({
-      date: formatDate(new Date(date)), // Format the date before storing
+      date: new Date(date), // Assuming date is passed in a compatible format
       name,
-      quantity: parseFloat(quantity),     // Ensure quantity is a number
-      price: parseFloat(price),           // Ensure price is a number
-      total: parseFloat(total) ,           // Ensure total is a number
-      sale
-      
+      quantity: parseFloat(quantity), // Ensure numbers are valid
+      price: parseFloat(price),
+      total: parseFloat(total),
+      sale: parseFloat(sale)
     });
-    
+
     await salesRecord.save();
     res.status(200).json({ message: "Sales record saved successfully" });
-  
   } catch (error) {
-    console.error("Error saving sales record:", error); // Log error for debugging
+    console.error("Error saving sales record:", error);
     res.status(500).json({ message: "Unable to save data", error: error.message });
   }
 });
+
 
 app.get("/read", async (req, res) => {
     try {
