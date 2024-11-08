@@ -60,10 +60,10 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/insert", async (req, res) => {
-  const { date, name, quantity, price, total, sale } = req.body;
+  const { date, name, quantity, price, total } = req.body;
 
-  if (!date || !name || !quantity || !price || !total || !sale) {
-    console.log("Validation failed:", { date, name, quantity, price, total, sale });
+  if (!date || !name || !quantity || !price || !total ) {
+    console.log("Validation failed:", { date, name, quantity, price, total });
     return res.status(400).json({ message: "All fields are required." });
   }
 
@@ -73,8 +73,7 @@ app.post("/insert", async (req, res) => {
       name,
       quantity: parseFloat(quantity),
       price: parseFloat(price),
-      total: parseFloat(total),
-      sale: parseFloat(sale)
+      total: parseFloat(total)
     });
 
     await salesRecord.save();
@@ -114,7 +113,7 @@ app.get("/sales/sum", async (req, res) => {
 });
 
 app.put("/update", async (req, res) => {
-  const { id, updateDate, updateName, updateQuantity, updatePrice, updateTotal, updateSale } = req.body;
+  const { id, updateDate, updateName, updateQuantity, updatePrice, updateTotal } = req.body;
   try {
     const updateSalesData = await Sales.findById(id);
     if (updateSalesData) {
@@ -123,7 +122,6 @@ app.put("/update", async (req, res) => {
       updateSalesData.quantity = updateQuantity;
       updateSalesData.price = updatePrice;
       updateSalesData.total = updateTotal;
-      updateSalesData.sale = updateSale;
       await updateSalesData.save();
       res.status(201).json({ message: "Updated Successfully" });
     } else {
