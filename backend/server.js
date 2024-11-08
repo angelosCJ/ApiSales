@@ -102,7 +102,7 @@ app.get("/sales/sum", async (req, res) => {
       {
         $group: {
           _id: null,
-          totalSales: { $sum: "$sale" },
+          totalSales: { $sum: "$total" },
         },
       },
     ]);
