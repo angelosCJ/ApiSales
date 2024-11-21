@@ -92,8 +92,17 @@ app.put("/update",async(req,res)=>{
   }
 });
 
-app.delete('/delete/:id',async (req,res)=>{
-    const id = req.params.id;
-    await salesSchema.findByIdAndDelete(id).exec();
-    res.send("User Data Deleted");
-  });
+app.delete('/delete/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deletedItem = await salesSchema.findByIdAndDelete(id);
+    if (!deletedItem) {
+      return res.status(404).send({ message: "Item not found" });
+    }
+    res.status(200).send({ message: "User data deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting item:", error.message);
+    res.status(500).send({ message: "Internal Server Error", error: error.message });
+  }
+});
