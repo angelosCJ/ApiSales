@@ -16,7 +16,7 @@ mongoose.connect("mongodb+srv://kadurienzo:ballsdeep%402025@mern.zylr0.mongodb.n
 then(()=> console.log("Connected to MongoDB")).
 catch((error)=> console.log("Unable to connect to database",error));
 
-const PORT = process.env.PORT || 8800;
+const PORT = process.env.PORT || 3000 ;
 
 app.listen(PORT,()=>{
     console.log("Server is Live and Running");
