@@ -9,7 +9,6 @@ const Storage = require("./store");
 
 const app = express();
 app.use(express.json());
-const cors = require("cors");
 app.use(cors({ origin: "*" })); 
 
 mongoose.connect("mongodb+srv://kadurienzo:ballsdeep%402025@mern.zylr0.mongodb.net/Sales?retryWrites=true&w=majority&appName=MERN")
