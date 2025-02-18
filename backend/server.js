@@ -5,6 +5,7 @@ const bcryptjs = require("bcryptjs");
 const auth = require("./auth");
 const Sales = require("./schema"); // Make sure this is the correct path to your Sales model
 const router = express.Router();
+const Storage = require("./store");
 
 const app = express();
 app.use(express.json());
