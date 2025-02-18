@@ -68,7 +68,8 @@ app.post("/insert",async(req,res)=>{
 app.post("/insertStorage",async(req,res)=>{
    const {ItameName,Cartons,QuantityNumber,Rprice,CWprice,CRprice,StockPrice,StockProfit} = req.body;
       try {
-        const STORAGE_RECORDS = new storageSchema.schema({ItameName,Cartons,QuantityNumber,Rprice,CWprice,CRprice,StockPrice,StockProfit});
+     const STORAGE_RECORDS = new storageSchema({ ItemeName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit });
+
         await STORAGE_RECORDS.save();
         res.status(201).send("Stock amount and records saved successfuly");
       } catch (error) {
