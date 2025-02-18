@@ -173,3 +173,14 @@ app.delete('/delete/:id', async (req, res) => {
     res.status(500).json({ message: "Unable to delete data", error: error.message });
   }
 });
+
+ // Delete Storage Data
+app.delete("/deleteStorage/:id", async (req, res) => {
+    try {
+        await Storage.findByIdAndDelete(req.params.id);
+        res.status(200).send("Stock storage data deleted");
+    } catch (error) {
+        res.status(500).json({ message: "Unable to delete stock data", error });
+    }
+});
+
