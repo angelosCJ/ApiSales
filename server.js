@@ -4,12 +4,12 @@ const cors = require("cors");
 const bcryptjs = require("bcryptjs");
 const auth = require("./auth");
 const salesSchema = require("./schema");
+const storageSchema = require("./store");
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: ['http://192.168.100.3:8081', 'http://192.168.100.3:8080']
-}));    
+app.use(cors());
+
 mongoose.connect("mongodb+srv://kadurienzo:ballsdeep%402025@mern.zylr0.mongodb.net/Sales?retryWrites=true&w=majority&appName=MERN").
 then(()=> console.log("Connected to MongoDB")).
 catch((error)=> console.log("Unable to connect to database",error));
@@ -65,12 +65,32 @@ app.post("/insert",async(req,res)=>{
     }
 });
 
+app.post("/insertStorage",async(req,res)=>{
+   const {ItameName,Cartons,QuantityNumber,Rprice,CWprice,CRprice,StockPrice,StockProfit} = req.body;
+      try {
+        const STORAGE_RECORDS = new storageSchema.schema({ItameName,Cartons,QuantityNumber,Rprice,CWprice,CRprice,StockPrice,StockProfit});
+        await STORAGE_RECORDS.save();
+        res.status(201).send("Stock amount and records saved successfuly");
+      } catch (error) {
+        res.status(501).send("Unable to save storage stock data",error);
+      }
+});
+
 app.get("/read",async(req,res)=>{
     try {
         const SALES_DATA = await salesSchema.find({});
         res.send(SALES_DATA);
     } catch (error) {
-        res.status(501).send("Request Failed");
+        res.status(501).send("Request Failed",error);
+    }
+});
+
+app.get("/readStorage",async(req,res)=>{
+    try {
+        const STORAGE_DATA = await storageSchema.find({});
+        res.send(STORAGE_DATA);
+    } catch (error) {
+        res.status(501).send("Response Failed, Unable to read Storage data",error);
     }
 });
 
@@ -92,17 +112,14 @@ app.put("/update",async(req,res)=>{
   }
 });
 
-app.delete('/delete/:id', async (req, res) => {
-  const id = req.params.id;
+app.delete('/delete/:id',async (req,res)=>{
+    const id = req.params.id;
+    await salesSchema.findByIdAndDelete(id).exec();
+    res.send("User Data Deleted");
+  });
 
-  try {
-    const deletedItem = await salesSchema.findByIdAndDelete(id);
-    if (!deletedItem) {
-      return res.status(404).send({ message: "Item not found" });
-    }
-    res.status(200).send({ message: "User data deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting item:", error.message);
-    res.status(500).send({ message: "Internal Server Error", error: error.message });
-  }
-});
+  app.delete("/deleteStorage/:id",async(req,res)=>{
+    const id = req.params.id;
+    await storageSchema.findByIdAndDelete(id).exec();
+    res.send("Stock storage data deleted");
+  });
