@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const storage = new mongoose.Schema({
-    ItemName:{type:String,required:true},
+    ItameName:{type:String,required:true},
     Cartons:{type:String,required:true},
     QuantityNumber:{type:String,required:true},
     Rprice:{type:String,required:true},
