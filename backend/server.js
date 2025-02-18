@@ -116,6 +116,16 @@ app.get("/read", async (req, res) => {
   }
 });
 
+app.get("/readStorage", async (req, res) => {
+    try {
+        const STORAGE_DATA = await Storage.find({});
+        res.json(STORAGE_DATA);
+    } catch (error) {
+        res.status(500).json({ message: "Unable to read storage data", error });
+    }
+});
+
+
 // Sum of all 'sale' values
 app.get("/sales/sum", async (req, res) => {
   try {
