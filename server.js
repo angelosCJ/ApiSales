@@ -4,7 +4,7 @@ const cors = require("cors");
 const bcryptjs = require("bcryptjs");
 const auth = require("./auth");
 const salesSchema = require("./schema");
-const storageSchema = require("./store");
+const Storage = require("./store"); // Correct import
 
 const app = express();
 app.use(express.json());
@@ -67,16 +67,19 @@ app.post("/insert",async(req,res)=>{
     }
 });
 
-app.post("/insertStorage",async(req,res)=>{
-   const {ItemName,Cartons,QuantityNumber,Rprice,CWprice,CRprice,StockPrice,StockProfit} = req.body;
-      try {
-     const STORAGE_RECORDS = new storageSchema.schema({ ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit });
+// Insert Storage Data
+app.post("/insertStorage", async (req, res) => {
+    const { ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit } = req.body;
+    try {
+        const STORAGE_RECORDS = new Storage({
+            ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit
+        });
 
         await STORAGE_RECORDS.save();
-        res.status(201).send("Stock amount and records saved successfuly");
-      } catch (error) {
-        res.status(501).send("Unable to save storage stock data",error);
-      }
+        res.status(201).send("Stock data stored successfully");
+    } catch (error) {
+        res.status(500).json({ message: "Unable to save stock data", error });
+    }
 });
 
 app.get("/read",async(req,res)=>{
@@ -88,12 +91,13 @@ app.get("/read",async(req,res)=>{
     }
 });
 
-app.get("/readStorage",async(req,res)=>{
+// Read Storage Data
+app.get("/readStorage", async (req, res) => {
     try {
-        const STORAGE_DATA = await storageSchema.find({});
-        res.send(STORAGE_DATA);
+        const STORAGE_DATA = await Storage.find({});
+        res.json(STORAGE_DATA);
     } catch (error) {
-        res.status(501).send("Response Failed, Unable to read Storage data",error);
+        res.status(500).json({ message: "Unable to read storage data", error });
     }
 });
 
@@ -121,8 +125,12 @@ app.delete('/delete/:id',async (req,res)=>{
     res.send("User Data Deleted");
   });
 
-  app.delete("/deleteStorage/:id",async(req,res)=>{
-    const id = req.params.id;
-    await storageSchema.findByIdAndDelete(id).exec();
-    res.send("Stock storage data deleted");
-  });
+ // Delete Storage Data
+app.delete("/deleteStorage/:id", async (req, res) => {
+    try {
+        await Storage.findByIdAndDelete(req.params.id);
+        res.status(200).send("Stock storage data deleted");
+    } catch (error) {
+        res.status(500).json({ message: "Unable to delete stock data", error });
+    }
+});
