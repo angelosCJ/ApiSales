@@ -11,4 +11,4 @@ const storage = new mongoose.Schema({
     StockProfit:{type:String,required:true},
 });
 
-module.exports = mongoose.model("stokestorage",storage);
+module.exports = mongoose.model("salesdatas",storage);
