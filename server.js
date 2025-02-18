@@ -69,18 +69,17 @@ app.post("/insert",async(req,res)=>{
 
 // Insert Storage Data
 app.post("/insertStorage", async (req, res) => {
-    const { ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit } = req.body;
-    try {
-        const STORAGE_RECORDS = new Storage({
-            ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit
-        });
-
-        await STORAGE_RECORDS.save();
-        res.status(201).send("Stock data stored successfully");
-    } catch (error) {
-        res.status(500).json({ message: "Unable to save stock data", error });
-    }
+   const { ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit } = req.body;
+   try {
+      const STORAGE_RECORDS = new storageSchema({ ItemName, Cartons, QuantityNumber, Rprice, CWprice, CRprice, StockPrice, StockProfit });
+      await STORAGE_RECORDS.save();
+      res.status(201).send("Stock amount and records saved successfully");
+   } catch (error) {
+      console.error("Storage Insert Error:", error);
+      res.status(500).send("Unable to save storage stock data");
+   }
 });
+
 
 app.get("/read",async(req,res)=>{
     try {
