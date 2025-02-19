@@ -143,6 +143,31 @@ app.get("/sales/sum", async (req, res) => {
   }
 });
 
+// Sum of all 'Stock & Profit' values
+app.get("/storages/sum", async (req, res) => {
+  try {
+    const result = await Storage.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalStock: { $sum: "$stockPrice" },
+          totalProfit: { $sum: "$stockProfit" },
+        },
+      },
+    ]);
+
+    const totalStock = result.length > 0 ? result[0].totalStock : 0;
+    const totalProfit = result.length > 0 ? result[0].totalProfit : 0;
+
+    res.json({ totalStock, totalProfit }); //  Send both values in a single response
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+
 app.put("/update", async (req, res) => {
   const { id, updateDate, updateName, updateQuantity, updatePrice, updateTotal } = req.body;
   try {
