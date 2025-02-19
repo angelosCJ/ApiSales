@@ -150,8 +150,8 @@ app.get("/storages/sum", async (req, res) => {
       {
         $group: {
           _id: null,
-          totalStock: { $sum: "$stockPrice" },
-          totalProfit: { $sum: "$stockProfit" },
+          totalStock: { $sum: "$StockPrice" },
+          totalProfit: { $sum: "$StockProfit" },
         },
       },
     ]);
