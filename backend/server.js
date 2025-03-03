@@ -6,6 +6,7 @@ const auth = require("./auth");
 const Sales = require("./schema"); // Make sure this is the correct path to your Sales model
 const router = express.Router();
 const Storage = require("./store");
+const Location = require("./location");
 
 const app = express();
 app.use(express.json());
@@ -104,6 +105,25 @@ app.post("/insertStorage", async (req, res) => {
    }
 });
 
+app.post('/save-location', async (req, res) => {
+  try {
+    const { city, region, country, latitude, longitude, deviceId } = req.body;
+
+    const newLocation = new Location({
+      city,
+      region,
+      country,
+      latitude,
+      longitude,
+      deviceId,
+    });
+
+    await newLocation.save();
+    res.status(201).json({ message: 'Location saved successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to save location' });
+  }
+});
 
 app.get("/read", async (req, res) => {
   try {
